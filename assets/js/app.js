@@ -1051,7 +1051,7 @@
         "<h2>" + esc(t("st.storeTitle")) + "</h2><p>" + esc(t("st.store")) + "</p>" +
         "<h2>" + esc(t("st.limitsTitle")) + "</h2><p>" + esc(t("st.limits")) + "</p>" +
         "<h2>" + esc(t("st.contactTitle")) + "</h2><dl>" +
-          "<dt>" + esc(t("st.name")) + "</dt><dd>" + esc(contact.name || t("st.tbd")) + "</dd>" +
+          "<dt>" + esc(t("st.name")) + "</dt><dd>" + esc(contact.name || t("st.owner")) + "</dd>" +
           "<dt>" + esc(t("st.phone")) + '</dt><dd dir="ltr" class="phone-number">' + esc(contact.phone || C.phoneDisplay) + "</dd>" +
           "<dt>" + esc(t("st.address")) + "</dt><dd>" + esc(tx(C.address)) + "</dd>" +
         "</dl>" +
