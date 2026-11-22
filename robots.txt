@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /oscar-site/admin.html
 Allow: /
 
 Sitemap: https://aixory.github.io/oscar-site/sitemap.xml
