@@ -302,6 +302,8 @@ details.langs .lg { font-size: 12px; color: var(--muted); font-weight: 500; lett
 <script>
 (function () {
   "use strict";
+  // Never run inside another site's frame (stops tricks that hide the panel under fake buttons).
+  if (window.top !== window.self) { document.body.innerHTML = ""; return; }
   var C = (window.Oscar && window.Oscar.config) || {};
   var API = String((C.supabase && C.supabase.url) || "").replace(/\/$/, "") + "/functions/v1/whatsapp-bot/admin";
   var LS = "oscar-panel-key";
