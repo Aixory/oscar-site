@@ -1,0 +1,90 @@
+# OSCAR Boutique — website
+
+The online store for OSCAR, evening dresses and designer wear, Herzl 73, Ramla.
+
+It works in two parts:
+
+1. **Website** (this folder): shop, product pages, bag, checkout, fittings, 4 languages, currencies, accessibility, sales, promo codes, stock limits and holiday looks.
+2. **WhatsApp bot** (the `oscar-bot` folder): the owner sends a photo and a price and the piece appears on the site with its texts in all 4 languages. Prices, stock, sizes, sales, codes, holiday looks, hours and announcements are all changed the same way. Its README has the full setup.
+
+Until the database is connected, the site shows its built-in sample collection with an example sale (15% off two gowns), an example code (`OSCAR10`) and example stock limits, so everything can be tried. In this preview the footer also has a "Try a holiday look" menu.
+
+## What's in the folder
+
+```
+index.html              the page shell
+assets/css/oscar.css    all styles: photo-first minimal look, dark mode, high contrast
+assets/js/config.js     store details: phone, address, hours, currencies, logo, connections
+assets/js/i18n.js       every piece of interface text in Hebrew, English, Arabic and Russian
+assets/js/products.js   sample dresses, example sale/stock, and loading from Supabase
+assets/js/store.js      bag, sale prices, stock limits, currency conversion, accessibility settings
+assets/js/themes.js     holiday looks (same list as the bot)
+assets/js/decorations.js  the short falling sparkles/snow/confetti effect for holiday looks
+assets/js/art.js        product photos (and a drawn fallback for any piece without photos)
+assets/img/products/    product photos, each in two sizes: name-1080.webp and name-540.webp
+assets/js/app.js        pages, navigation, checkout and fitting forms
+```
+
+No build step and no packages to install. It runs as plain files on any free host.
+
+## Try it on your computer
+
+Double-click `index.html`. Everything works except live exchange rates and Google Fonts if you're offline.
+
+## Products and photos
+
+The collection in `assets/js/products.js` is the boutique's own photographed pieces. Each has a name, colour and description in all 4 languages, categories, sizes and a photo. Pieces that share a `group` (the lace corset gown in ivory, blush and cocoa) show each other as colour options. The top of the home page shows the OSCAR banner (`heroBanner` in `config.js`, files in `assets/img/hero/`; phones get the `-mobile` crop of the two gowns). To show product photos there instead, the bot can switch the banner off ("תשים בראש האתר את השמלה השחורה"), or remove `heroBanner`. `heroProducts` in `config.js` picks those photos (phones show the first), and `fittingProduct` picks the photo beside the fittings section. Hero photos use the `-hero.webp` version of each image.
+
+## Opening, page changes and the lookbook
+
+- **Opening:** the first time someone opens the site in a visit, a gold seam is stitched down an ivory page and then opens onto the site (about 2.5 seconds; a click or key skips it). It doesn't show again until the next visit, and never for visitors who asked for reduced motion or turned on "stop animations" in the accessibility menu. The markup is `#intro` at the top of `index.html`.
+- **Page changes:** an ivory panel with the OSCAR mark covers the page while the next one is drawn (about 0.8 seconds). Opening a product from its card instead grows the card photo into the product page. Both are off with reduced motion.
+- **Lookbook:** the home page shows pieces whose photo has had the background removed, standing on a stage that takes each dress's colour. Visitors drag, swipe, use the arrows or the keyboard, or pick from the strip; tapping the piece in front opens it. The list and the stage colours are `Oscar.lookbook` in `products.js`, and the cut-out photos are in `assets/img/cutouts/` (`<slug>-1100.webp` and `<slug>-640.webp`, transparent background). To add a piece, save its cut-out in both heights, add a line to the list with its widths, and it appears; a piece that is hidden or sold out is skipped automatically. A phone's built-in "lift subject from background" works well for making a cut-out.
+- **Menu:** on a computer, the evening-dress menu shows a cut-out from the category under the pointer. Product cards with two or more photos show the second photo on hover.
+
+## Things to fill in before launch
+
+Once the bot is connected, all of these are done from WhatsApp: real prices, opening hours, turning off the "preview" notice ("תוריד את ההודעה של גרסת התצוגה"), the accessibility coordinator's name (required by Israeli regulations) and the store policies.
+
+The only things left in `assets/js/config.js` are the logo (`logo: "assets/img/logo.png"`) and the database connection (`supabase`).
+
+The store policies are placeholders until the owner sends the final wording, ideally checked by a lawyer, following the Consumer Protection Law for online sales.
+
+## Where it's online
+
+The site is published with **GitHub Pages** from the repository `Aixory/oscar-site`: **https://aixory.github.io/oscar-site/**. Every push to the `main` branch goes live in about a minute.
+
+For your own domain: repository **Settings → Pages → Custom domain**, then add the DNS records GitHub shows. After that, replace `https://aixory.github.io/oscar-site/` in `index.html`, `robots.txt` and `sitemap.xml`, and the bot's `SITE_URL`.
+
+## How orders work right now
+
+Card payments aren't connected yet, so checkout builds the order (items, sizes, total in ₪, customer details) and opens WhatsApp to the boutique's number with everything filled in. The boutique confirms availability and payment. When you're ready, the checkout button can be switched to PayPal or an Israeli processor (Grow, Cardcom, Tranzila).
+
+## Languages and currencies
+
+- Hebrew is the default. Arabic and Hebrew display right to left.
+- To add a language: copy the `en` block in `i18n.js`, translate it, add the code to `config.languages`, and add its entry in `Oscar.i18n.meta`.
+- Prices are stored and charged in shekels. Other currencies are shown as approximate conversions using free daily rates from ExchangeRate-API (credited in the footer, as their free plan requires).
+
+## Accessibility
+
+Built to meet IS 5568 / WCAG 2.0 AA (and WCAG 2.1 AA): keyboard navigation, screen-reader labels, skip link, contrast, 130% text, reduced motion, and an accessibility menu (text size, high contrast, link underlines, readable font, line spacing, stop animations). The accessibility statement page is in all 4 languages. Before launch, it's worth having the site checked by an accessibility tester, since automated building can't catch everything.
+
+## Connecting the database
+
+Follow `oscar-bot/README.md`. In short: create a free Supabase project, run the SQL files from `oscar-bot/supabase`, deploy the bot, then put the project URL and the **publishable** key (`sb_publishable_…`, or the older `anon` key) in `config.supabase`:
+
+```js
+supabase: { url: "https://YOUR-PROJECT-REF.supabase.co", anonKey: "sb_publishable_..." },
+```
+
+The site then loads pieces, running sales and settings from the database instead of the samples. It can only read; promo codes are checked one at a time and never listed.
+
+Only the WhatsApp bot writes to the database, with the **secret** key that lives in Supabase. That key must never go into the website files.
+
+## How stock and sales show on the site
+
+- **Stock**: a piece can have a count per size and/or a total limit. Sizes at 0 can't be picked; the bag never lets someone add more than what's left; "Only N left" appears once stock drops to the piece's alert level (3 unless the owner changes it).
+- **Sales**: the best running discount is shown with the old price struck through, a −% badge, and a "Sale" filter. Sales can start and end on set dates by themselves.
+- **Promo codes**: entered at checkout; the discount and code are included in the WhatsApp order message so the boutique sees exactly what the customer saw.
+- **Holiday looks**: the top bar takes the holiday colour and greeting, and a short decoration plays over the home photo (never for visitors who turned off animations).

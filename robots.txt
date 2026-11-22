@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aixory.github.io/oscar-site/sitemap.xml
