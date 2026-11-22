@@ -459,7 +459,7 @@ Oscar.data = {
   fromRow: function (r) {
     function lang(prefix) { return { he: r[prefix + "_he"], en: r[prefix + "_en"], ar: r[prefix + "_ar"], ru: r[prefix + "_ru"] }; }
     return {
-      slug: r.slug, price: Number(r.price_ils) || 0, isNew: !!r.is_new,
+      id: r.id || null, slug: r.slug, price: Number(r.price_ils) || 0, isNew: !!r.is_new,
       categories: r.categories || [], sizes: r.sizes || [], soldOut: r.sold_out || [],
       stock: r.stock || {}, stockTotal: r.stock_total === null || r.stock_total === undefined ? null : Number(r.stock_total),
       lowStockThreshold: r.low_stock_threshold === null || r.low_stock_threshold === undefined ? 3 : Number(r.low_stock_threshold),

@@ -60,6 +60,8 @@
 
   /* ───────────── Helpers ───────────── */
   function wa(text) { return "https://wa.me/" + C.phoneIntl + (text ? "?text=" + encodeURIComponent(text) : ""); }
+  // "#12 Black Zip Gown": the dress number helps the shop find the piece (and use it with its WhatsApp bot).
+  function refName(p) { return (p && p.id ? "#" + p.id + " " : "") + tx(p.name); }
   function brandify(s) { return esc(s).replace("OSCAR", '<span class="brand-word">OSCAR</span>'); }
   function catLabel(id) { return t("cat." + id); }
   function primaryCat(p) {
@@ -485,7 +487,7 @@
         (sizes ? ' · ' + esc(t("lb.sizes", { sizes: "§" })).replace("§", '<span dir="ltr">' + esc(sizes) + "</span>") : "") + "</p>" +
       '<p class="lb-price">' + amountHTML(f.price, f.original) + "</p>" +
       '<div class="btn-row"><a class="btn" href="#p-' + esc(p.slug) + '">' + esc(t("lb.view")) + "</a>" +
-        '<a class="btn btn-ghost" href="' + wa(t("wa.askProduct", { name: tx(p.name) })) + '" target="_blank" rel="noopener">' + ICON.chat + esc(t("lb.ask")) + "</a></div>";
+        '<a class="btn btn-ghost" href="' + wa(t("wa.askProduct", { name: refName(p) })) + '" target="_blank" rel="noopener">' + ICON.chat + esc(t("lb.ask")) + "</a></div>";
   }
   function lookbookHTML() {
     var looks = lookbookLooks(), n = looks.length;
@@ -870,7 +872,8 @@
           saleNote +
           (low ? '<p class="stock-note">' + esc(stockText(low)) + "</p>" : "") +
           '<p class="pdp-desc">' + esc(tx(p.description)) + "</p>" +
-          '<p class="meta-line"><span>' + esc(t("product.color")) + ":</span> " + esc(tx(p.color)) + "</p>" + swatches +
+          '<p class="meta-line"><span>' + esc(t("product.color")) + ":</span> " + esc(tx(p.color)) + "</p>" +
+           (p.id ? '<p class="meta-line"><span>' + esc(t("product.ref")) + ':</span> <span dir="ltr">#' + p.id + "</span></p>" : "") + swatches +
           '<form id="pdp-form" novalidate data-slug="' + esc(p.slug) + '">' +
             '<fieldset class="sizes" id="size-set">' +
               "<legend><span>" + esc(t("product.size")) + "</span></legend>" +
@@ -880,7 +883,7 @@
             "</fieldset>" +
             '<div class="pdp-actions" style="margin-block-start:1.25rem">' +
               '<button class="btn btn-block" type="submit" id="add-btn"' + (allOut ? " disabled" : "") + ">" + ICON.bag + esc(t("product.add")) + "</button>" +
-              '<a class="btn btn-ghost btn-block" href="' + wa(t("wa.fitProduct", { name: name })) + '" target="_blank" rel="noopener">' + esc(t("product.fit")) + "</a>" +
+              '<a class="btn btn-ghost btn-block" href="' + wa(t("wa.fitProduct", { name: refName(p) })) + '" target="_blank" rel="noopener">' + esc(t("product.fit")) + "</a>" +
             "</div>" +
           "</form>" +
           '<p class="tailor-note">' + ICON.scissors + "<span>" + esc(t("tailor.short")) + "</span></p>" +
@@ -890,7 +893,7 @@
             "<details><summary>" + esc(t("product.delivery")) + '</summary><div class="acc-body"><p>' + esc(t("product.deliveryText")) +
               '</p><p><a class="text-link" href="#policies">' + esc(t("product.policies")) + "</a></p></div></details>" +
           "</div>" +
-          '<a class="text-link" href="' + wa(t("wa.askProduct", { name: name })) + '" target="_blank" rel="noopener">' + esc(t("product.ask")) + "</a>" +
+          '<a class="text-link" href="' + wa(t("wa.askProduct", { name: refName(p) })) + '" target="_blank" rel="noopener">' + esc(t("product.ask")) + "</a>" +
           '<p class="note">' + esc(t("price.note")) + "</p>" +
         "</div>" +
       "</div>" +
@@ -1306,7 +1309,7 @@
     var lines = O.cart.lines(), saved = O.cart.savings();
     var codeUsed = lines.filter(function (l) { return l.sale && l.sale.code; })[0];
     var msg = [t("wa.hello"), t("wa.orderTitle"), ""].concat(lines.map(function (l) {
-      return "• " + tx(l.product.name) + " · " + t("wa.size") + " " + sizeLabel(l.size) + " · ×" + l.qty + " · " + O.currency.ils(l.total) +
+      return "• " + refName(l.product) + " · " + t("wa.size") + " " + sizeLabel(l.size) + " · ×" + l.qty + " · " + O.currency.ils(l.total) +
         (l.originalTotal > l.total ? " (−" + l.percent + "%, " + t("wa.instead") + " " + O.currency.ils(l.originalTotal) + ")" : "");
     })).concat([
       "",
