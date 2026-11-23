@@ -62,7 +62,7 @@ The store policies are placeholders until the owner sends the final wording, ide
 
 ## Where it's online
 
-The site is published with **GitHub Pages** from the repository `Aixory/oscar-site`: **https://aixory.github.io/oscar-site/**. Every push to the `main` branch goes live in about a minute.
+The site is published with **GitHub Pages** from the repository `Aixory/oscar-site` at **https://oscar-fashion.com/** (custom domain; the old https://aixory.github.io/oscar-site/ address redirects there). DNS for oscar-fashion.com is on Cloudflare's free plan (account xorystudios@gmail.com, nameservers adelaide/james.ns.cloudflare.com): four A records to GitHub (185.199.108–111.153) and `www` → `aixory.github.io`, all **DNS only** (grey cloud) so GitHub can renew the HTTPS certificate. The domain itself stays registered at Vangus. Every push to the `main` branch goes live in about a minute.
 
 For your own domain: repository **Settings → Pages → Custom domain**, then add the DNS records GitHub shows. After that, replace `https://aixory.github.io/oscar-site/` in `index.html`, `robots.txt` and `sitemap.xml`, and the bot's `SITE_URL`.
 
