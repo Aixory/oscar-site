@@ -1137,6 +1137,8 @@
   var VIEW_PAGES = ["checkout", "contact", "accessibility", "policies"];
   function parseHash() {
     var h = (location.hash || "").replace(/^#/, "");
+    /* A page with its own address (oscar-fashion.com/shop-maxi, made by tools/build-seo.js) opens at its view */
+    if (!h && location.href.indexOf("#") === -1) h = document.documentElement.getAttribute("data-route") || "";
     try { h = decodeURIComponent(h); } catch (e) { /* keep raw */ }
     if (!h || h === "home") return { view: "home" };
     if (h === "content") return null;
@@ -1159,9 +1161,62 @@
     if (r.view === "contact") return t("nav.contact");
     return t("page." + r.view);
   }
+  /* Title, description, address and Google data for the view on screen.
+     Views that have their own page (O.seoPages, written by tools/build-seo.js) point Google at that page. */
+  var SITE_URL = "https://oscar-fashion.com/";
+  function routeKey(r) {
+    if (!r || r.view === "home") return "";
+    if (r.view === "shop") return r.cat === "all" ? "shop" : "shop-" + r.cat;
+    if (r.view === "product") return "p-" + r.slug;
+    if (r.view === "contact") return "contact";
+    return null;
+  }
+  function setHead(sel, attr, val, make) {
+    var el = document.head.querySelector(sel);
+    if (!el && make) { el = document.createElement(make[0]); el.setAttribute(make[1], make[2]); document.head.appendChild(el); }
+    if (el) el.setAttribute(attr, val);
+  }
   function setTitle() {
-    var r = O.state.route || { view: "home" };
-    document.title = r.view === "home" ? "OSCAR · " + t("hero.eyebrow") : pageName() + " · OSCAR";
+    var r = O.state.route || { view: "home" }, key = routeKey(r);
+    var seo = key !== null && O.seoPages ? O.seoPages[key] : null;
+    var he = O.state.lang === "he";
+    document.title = he && seo ? seo.t : (r.view === "home" ? "OSCAR · " + t("hero.eyebrow") : pageName() + " · OSCAR");
+    var url = SITE_URL + (seo ? key : "");
+    setHead('link[rel="canonical"]', "href", url, ["link", "rel", "canonical"]);
+    setHead('meta[property="og:url"]', "content", url);
+    if (he && seo) {
+      setHead('meta[name="description"]', "content", seo.d);
+      setHead('meta[property="og:title"]', "content", seo.t);
+      setHead('meta[property="og:description"]', "content", seo.d);
+    }
+    var robots = document.head.querySelector('meta[name="robots"]');
+    if (r.view === "notFound" || r.view === "checkout") setHead('meta[name="robots"]', "content", "noindex", ["meta", "name", "robots"]);
+    else if (robots) robots.parentNode.removeChild(robots);
+    productData(r, url);
+  }
+  /* The piece on screen, with its live price and stock, for Google Shopping and search results */
+  function productData(r, url) {
+    var old = document.getElementById("ld-product");
+    if (old) old.parentNode.removeChild(old);
+    if (r.view !== "product") return;
+    var p = O.data.bySlug(r.slug);
+    if (!p) return;
+    var f = O.pricing.final(p, false);
+    var imgs = (p.images || []).map(function (u) { return /^https?:/.test(u) ? u : SITE_URL + u.replace(/^\//, ""); });
+    var data = {
+      "@context": "https://schema.org", "@type": "Product", name: tx(p.name), sku: p.slug, image: imgs,
+      description: tx(p.description) || tx(p.name), color: tx(p.color) || undefined,
+      brand: { "@type": "Brand", name: "OSCAR" },
+      offers: {
+        "@type": "Offer", url: url, priceCurrency: "ILS", price: String(f.price),
+        availability: soldOutAll(p) ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+        itemCondition: "https://schema.org/NewCondition",
+        seller: { "@type": "ClothingStore", name: "OSCAR Boutique", "@id": SITE_URL + "#store" }
+      }
+    };
+    var el = document.createElement("script");
+    el.type = "application/ld+json"; el.id = "ld-product"; el.textContent = JSON.stringify(data);
+    document.head.appendChild(el);
   }
 
   function route(opts) {
@@ -1457,6 +1512,13 @@
   var searchTimer = null;
   function bindEvents() {
     window.addEventListener("hashchange", function () { route({ transition: true }); });
+    /* On a page with its own address, the home links ("#") would leave the address unchanged: send them home explicitly */
+    if (document.documentElement.getAttribute("data-route")) {
+      document.addEventListener("click", function (e) {
+        var a = e.target.closest ? e.target.closest('a[href="#"]') : null;
+        if (a && !e.defaultPrevented && !e.metaKey && !e.ctrlKey) { e.preventDefault(); location.hash = "home"; }
+      });
+    }
     var preview = function (e) {
       var a = e.target.closest ? e.target.closest(".nav-drop-panel a") : null;
       if (!a) return;

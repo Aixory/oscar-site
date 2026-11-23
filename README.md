@@ -66,6 +66,14 @@ The site is published with **GitHub Pages** from the repository `Aixory/oscar-si
 
 For your own domain: repository **Settings → Pages → Custom domain**, then add the DNS records GitHub shows. After that, replace `https://aixory.github.io/oscar-site/` in `index.html`, `robots.txt` and `sitemap.xml`, and the bot's `SITE_URL`.
 
+## Google
+
+The shop switches views with the part after "#", which Google sees as one page. So every collection, every piece and the visit page also has a real address of its own (`oscar-fashion.com/shop-maxi`, `oscar-fashion.com/p-noir-sequin-drape-gown`, `oscar-fashion.com/contact`), with its own Hebrew title, description and Google data. Each one is a copy of `index.html` that opens the same live shop at that view.
+
+- These pages, `assets/js/seo-pages.js` and `sitemap.xml` are written by `node tools/build-seo.js`. Run it after changing `index.html` (for example a new `?v=` tag) and after pieces are added, so new pieces get their own address too.
+- On screen, the shop keeps the title, the address Google should use and the piece's live price and stock up to date as visitors move around.
+- The boutique's Google Maps listing ("אוסקר בוטיק", שדרות הרצל 73) is the strongest signal for local searches. Its owner should add `https://oscar-fashion.com` as the website there.
+
 ## How orders work right now
 
 Card payments aren't connected yet, so checkout builds the order (items, sizes, total in ₪, customer details) and opens WhatsApp to the boutique's number with everything filled in. The boutique confirms availability and payment. When you're ready, the checkout button can be switched to PayPal or an Israeli processor (Grow, Cardcom, Tranzila).

@@ -993,3 +993,8 @@ body.at-hero .contact-btn:hover { background: #FFFFFF; color: #111111; border-co
 /* The values strip: three short statements under a hairline, centred on wide screens */
 @media (min-width: 760px) { .value { text-align: center; justify-items: center; border-top-color: var(--line-strong); } }
 .footer-bottom .credit { color: var(--ink-fg); opacity: .8; }
+
+/* ───────────── Text a page shows for a moment before the shop loads (and what search engines read) ───────────── */
+.seo-static { padding-block: calc(var(--header-h) + 3rem) 4rem; display: grid; gap: 1rem; }
+.seo-static h1 { font-size: var(--fs-xl); font-weight: 300; }
+.seo-static p { color: var(--muted); max-width: 46ch; }
