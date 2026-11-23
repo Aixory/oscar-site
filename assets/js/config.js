@@ -6,7 +6,8 @@ window.Oscar = window.Oscar || {};
 Oscar.config = {
   storeName: "OSCAR",
 
-  // Website design and development credit (footer, policies page and the page's author tag)
+  // Website design and development credit (footer, policies page and the page's author tag).
+  // Fixed here in the code on purpose: nothing from the database, the WhatsApp bot or the panel can change it.
   siteDesigner: "AVI SHINI",
 
   // Path or URL of the logo image. Leave empty to show the text wordmark.
