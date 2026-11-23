@@ -35,6 +35,8 @@ assets/js/app.js        pages, navigation, checkout and fitting forms
 
 No build step and no packages to install. It runs as plain files on any free host.
 
+When a release changes the CSS or JS, bump the `?v=` tag on their links in `index.html` (all nine share one value) so visitors never mix old and new files.
+
 ## Try it on your computer
 
 Double-click `index.html`. Everything works except live exchange rates and Google Fonts if you're offline.
