@@ -255,19 +255,19 @@
 
   function renderHeader() {
     $("#site-header").innerHTML =
-      '<div class="wrap header-inner">' +
+      '<div class="header-inner">' +
         '<div class="header-start">' +
           '<button class="icon-btn menu-btn" id="menu-btn" type="button" aria-haspopup="dialog" aria-controls="menu-dialog" aria-label="' + esc(t("nav.menu")) + '">' + ICON.menu + "</button>" +
-          '<nav class="nav-desktop" aria-label="' + esc(t("nav.main")) + '">' + navDesktop() + "</nav>" +
+          '<a class="contact-btn" href="#book" aria-label="' + esc(t("nav.book")) + '">' + ICON.calendar + '<span class="contact-label" aria-hidden="true">' + esc(t("nav.book")) + "</span></a>" +
         "</div>" +
         wordmark() +
         '<div class="header-end">' +
-          '<a class="contact-btn" href="#book" aria-label="' + esc(t("nav.book")) + '">' + ICON.calendar + '<span class="contact-label" aria-hidden="true">' + esc(t("nav.book")) + "</span></a>" +
           selectBox("lang-select", "js-lang", "lang.label", langOptions()) +
           selectBox("cur-select", "js-cur", "cur.label", curOptions()) +
           '<button class="icon-btn" id="cart-btn" type="button" aria-haspopup="dialog" aria-controls="cart-dialog">' + ICON.bag +
             '<span class="cart-count" id="cart-count" aria-hidden="true" hidden></span></button>' +
         "</div>" +
+        '<nav class="nav-desktop" aria-label="' + esc(t("nav.main")) + '">' + navDesktop() + "</nav>" +
       "</div>";
     updateCartBadge();
   }
@@ -428,6 +428,7 @@
       : '<span class="ann-main">' + main + "</span>";
     renderHeader(); renderFooter(); renderFloats(); renderMenu(); renderA11y(); renderCart();
     markCurrentLinks();
+    measureAnnounce();
   }
 
   function markCurrentLinks() {
@@ -656,36 +657,59 @@
     }
   };
 
+  /* Home page: a full-screen entrance, then one full-screen section after another
+     (lookbook, new pieces, two pairs of category panels, the fitting, the house statement). */
+  var BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+  function lifestylePhoto(p) {
+    var imgs = p.images || [];
+    for (var i = 0; i < imgs.length; i++) if (!/-studio-/.test(imgs[i])) return imgs[i];
+    return imgs[0] || "";
+  }
   VIEWS.home = function () {
     var heroes = (C.heroProducts || []).map(O.data.bySlug).filter(Boolean);
     if (!heroes.length) heroes = O.data.products.slice(0, 3);
-    var newOnes = O.data.products.filter(function (x) { return x.isNew && !soldOutAll(x); }).slice(0, 8);
-    if (newOnes.length < 4) newOnes = O.data.products.slice(0, 8);
+    var newOnes = O.data.products.filter(function (x) { return x.isNew && !soldOutAll(x); }).slice(0, 10);
+    if (newOnes.length < 4) newOnes = O.data.products.slice(0, 10);
     var used = {};
-    var tileCats = O.data.category("evening").children.concat(["suits", "jumpsuits"]).map(O.data.category).filter(function (c) { return c && O.data.inCategory(c.id).length; });
-    var tiles = tileCats.map(function (c) {
+    var panelList = (C.homePanels || [["maxi"], ["couture"], ["short"], ["suits"]]).map(function (pc) {
+      var c = O.data.category(pc[0]);
+      if (!c) return null;
       var list = O.data.inCategory(c.id);
-      var p = list.filter(function (x) { return !used[x.slug]; })[0] || list[0];
-      if (p) used[p.slug] = true;
-      return '<a class="tile reveal" href="#shop-' + c.id + '"><span class="tile-media">' + (p ? O.art.render(p, leadPhoto(p), { decorative: true, sizes: SIZES.tile }) : "") + "</span>" +
-        '<span class="tile-label"><span class="tile-name">' + esc(t(c.key)) + "</span></span></a>";
-    }).join("");
+      if (!list.length) return null;
+      var p = (pc[1] && O.data.bySlug(pc[1])) || list.filter(function (x) { return !used[x.slug]; })[0] || list[0];
+      used[p.slug] = true;
+      var src = lifestylePhoto(p);
+      return '<a class="panel" href="#shop-' + c.id + '">' +
+        (src ? '<img class="panel-img" src="' + esc(src) + '"' + (/-1080\.webp$/.test(src) ? ' srcset="' + esc(src.replace(/-1080\.webp$/, "-540.webp")) + " 540w, " + esc(src) + ' 1080w" sizes="(min-width: 900px) 50vw, 100vw"' : "") +
+          ' alt="" width="1080" height="1440" loading="lazy" decoding="async">' : "") +
+        '<span class="panel-copy"><span class="panel-title">' + esc(t(c.key)) + '</span><span class="panel-cta">' + esc(t("home.shopCat")) + "</span></span></a>";
+    }).filter(Boolean);
+    var panels = "";
+    for (var pi = 0; pi < panelList.length; pi += 2) panels += '<section class="panels" aria-label="' + esc(t("home.collections")) + '">' + panelList.slice(pi, pi + 2).join("") + "</section>";
     var splitP = O.data.bySlug(C.fittingProduct) || heroes[0];
     var splitSrc = splitP && splitP.images && splitP.images[0] ? splitP.images[0].replace(/-1080\.webp$/, "-hero.webp") : "";
     var values = [["home.why1t", "home.why1"], ["home.why2t", "home.why2"], ["home.why3t", "home.why3"]].map(function (v) {
       return '<div class="value reveal"><h3>' + esc(t(v[0])) + "</h3><p>" + esc(t(v[1])) + "</p></div>";
     }).join("");
 
+    /* Computers get the boutique banner; phones get full-screen portraits that slowly cross-fade (each only loads where it shows) */
     var B = C.heroBanner && C.heroBannerOn !== false ? C.heroBanner : null;
-    var heroMedia = B
-      ? '<div class="hero-media"><picture>' +
-          (B.small ? '<source media="(max-width: 699px)" srcset="' + esc(B.small) + '" width="' + (B.smallWidth || "") + '" height="' + (B.smallHeight || "") + '">' : "") +
+    var slides = heroes.slice(0, 3).map(function (p, i) {
+      var src = p.images && p.images[0] ? p.images[0].replace(/-1080\.webp$/, "-hero.webp") : "";
+      if (!src) return "";
+      return '<picture class="hero-slide' + (i === 0 ? " is-on" : "") + '">' + (B ? '<source media="(min-width: 900px)" srcset="' + BLANK + '">' : "") +
+        '<img src="' + esc(src) + '" alt="" width="1000" height="1500" decoding="async"' + (i === 0 ? ' fetchpriority="high"' : ' loading="lazy"') + "></picture>";
+    }).join("");
+    var heroMedia = (B
+      ? '<div class="hero-media hero-wide"><picture>' +
+          '<source media="(max-width: 899px)" srcset="' + BLANK + '">' +
           '<img src="' + esc(B.src) + '"' + (B.medium ? ' srcset="' + esc(B.medium) + " 1200w, " + esc(B.src) + " " + B.width + 'w" sizes="100vw"' : "") +
           ' width="' + B.width + '" height="' + B.height + '" alt="" decoding="async" fetchpriority="high">' +
         "</picture></div>"
-      : '<div class="hero-media">' + heroes.slice(0, 3).map(heroImg).join("") + "</div>";
+      : "") +
+      '<div class="hero-media hero-tall' + (B ? "" : " hero-tall-all") + '">' + slides + "</div>";
     return '' +
-      '<section class="hero' + (B ? " hero-banner" : "") + '" aria-labelledby="hero-title">' +
+      '<section class="hero hero-full' + (B ? " hero-banner" : "") + '" aria-labelledby="hero-title">' +
         heroMedia +
         '<div class="wrap hero-copy">' +
           '<p class="eyebrow">' + esc(t("hero.eyebrow")) + "</p>" +
@@ -693,21 +717,21 @@
           '<p class="hero-lead">' + esc(t("hero.lead")) + "</p>" +
           '<div class="hero-actions"><a class="btn btn-light" href="#shop">' + esc(t("hero.shop")) + '</a><a class="btn btn-outline-light" href="#book">' + esc(t("nav.book")) + "</a></div>" +
         "</div>" +
+        '<a class="scroll-cue" href="#lookbook"><span class="sr-only">' + esc(t("home.scroll")) + '</span><span class="scroll-cue-label" aria-hidden="true">' + esc(t("home.scroll")) + '</span><span class="scroll-cue-line" aria-hidden="true"></span></a>' +
       "</section>" +
 
       lookbookHTML() +
 
-      '<section class="section" aria-labelledby="new-title"><div class="wrap">' +
-        '<div class="section-head"><h2 id="new-title">' + esc(t("home.new")) + '</h2><a class="text-link" href="#shop">' + esc(t("home.viewAll")) + "</a></div>" +
-        '<div class="grid grid-4">' + newOnes.map(card).join("") + "</div>" +
-      "</div></section>" +
+      '<section class="section rail-section fullpage" aria-labelledby="new-title">' +
+        '<div class="wrap section-head"><h2 id="new-title">' + esc(t("home.new")) + '</h2>' +
+          '<div class="rail-tools"><a class="text-link" href="#shop">' + esc(t("home.viewAll")) + "</a>" +
+          '<button type="button" class="rail-btn" data-rail="-1">' + esc(t("home.prev")) + '</button><button type="button" class="rail-btn" data-rail="1">' + esc(t("home.next")) + "</button></div></div>" +
+        '<div class="rail" id="new-rail" tabindex="0" aria-label="' + esc(t("home.new")) + '">' + newOnes.map(card).join("").replace(/class="card reveal"/g, 'class="card"') + "</div>" +
+      "</section>" +
 
-      '<section class="section section-tight" aria-labelledby="col-title"><div class="wrap">' +
-        '<div class="section-head"><div><h2 id="col-title">' + esc(t("home.collections")) + '</h2><p class="lead">' + esc(t("home.collectionsLead")) + "</p></div></div>" +
-        '<div class="tiles">' + tiles + "</div>" +
-      "</div></section>" +
+      panels +
 
-      '<section class="split" aria-labelledby="fit-title">' +
+      '<section class="split fullpage" aria-labelledby="fit-title">' +
         '<div class="split-media">' + (splitSrc ? '<img src="' + esc(splitSrc) + '" alt="" width="1000" height="1500" loading="lazy" decoding="async">' : "") + "</div>" +
         '<div class="split-copy">' +
           '<p class="eyebrow">' + esc(t("tailor.title")) + "</p>" +
@@ -724,13 +748,42 @@
         "</div>" +
       "</section>" +
 
-      '<section class="section" aria-label="OSCAR"><div class="wrap"><div class="values">' + values + "</div></div></section>" +
+      '<section class="section statement fullpage" aria-label="OSCAR"><div class="wrap">' +
+        '<p class="eyebrow">OSCAR</p>' +
+        '<p class="statement-text reveal">' + esc(t("home.statement")) + "</p>" +
+        '<div class="values">' + values + "</div>" +
+      "</div></section>" +
 
       '<section class="section section-tight" aria-labelledby="ig-title"><div class="wrap"><div class="ig">' +
         '<div><h2 id="ig-title">' + esc(t("home.igTitle")) + "</h2><p>" + esc(t("home.igText")) + "</p></div>" +
         '<a class="ig-handle" href="' + esc(C.instagram) + '" target="_blank" rel="noopener" dir="ltr">' + esc(C.instagramHandle) + "</a>" +
       "</div></div></section>";
   };
+
+  /* Home widgets: the phone hero's slow cross-fade and the new-pieces rail buttons */
+  var heroTimer = null;
+  function mountHome() {
+    clearInterval(heroTimer);
+    var slides = $$("#content .hero-slide");
+    if (slides.length > 1 && O.motionOK()) {
+      var k = 0;
+      heroTimer = setInterval(function () {
+        if (document.hidden || !$("#content .hero") || window.scrollY > window.innerHeight) return;
+        slides[k].classList.remove("is-on");
+        k = (k + 1) % slides.length;
+        slides[k].classList.add("is-on");
+      }, 6000);
+    }
+    var rail = $("#new-rail");
+    $$(".rail-btn").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (!rail) return;
+        var card1 = rail.firstElementChild, step = card1 ? card1.getBoundingClientRect().width + 12 : 300;
+        var rtl = document.documentElement.dir === "rtl";
+        rail.scrollBy({ left: Number(b.getAttribute("data-rail")) * step * (rtl ? -1 : 1), behavior: O.motionOK() ? "smooth" : "auto" });
+      });
+    });
+  }
 
   VIEWS.shop = function (r) {
     var cat = r.cat || "all";
@@ -1149,7 +1202,7 @@
     var y = window.scrollY;
     main.innerHTML = (VIEWS[r.view] || VIEWS.notFound)(r);
     if (r.view === "shop") renderShopGrid();
-    if (r.view === "home") LB.mount();
+    if (r.view === "home") { LB.mount(); mountHome(); } else clearInterval(heroTimer);
     if (r.view !== "home") { if (O.decorations) O.decorations.stop(); }
     else if (!opts.keep || opts.deco) startDecorations();
     setTitle();
@@ -1178,13 +1231,25 @@
   }
 
   /* ───────────── Header sits clear over the hero photo, solid once you scroll past it ───────────── */
+  var lastScrollY = 0;
   function updateHeroHeader() {
     var hero = $("#content .hero"), header = $("#site-header");
-    /* Below 1280px the banner's words sit on a black band under the photo: the header stays clear only over the photo itself */
-    var media = hero && hero.classList.contains("hero-banner") && window.innerWidth < 1280 ? hero.querySelector(".hero-media") : hero;
-    var over = !!media && !!header && media.getBoundingClientRect().bottom > header.getBoundingClientRect().bottom + 4;
+    var over = !!hero && !!header && hero.getBoundingClientRect().bottom > header.getBoundingClientRect().bottom + 4;
     document.body.classList.toggle("at-hero", over);
+    /* Out of the way while reading down the page, back as soon as you scroll up */
+    var y = window.scrollY, b = document.body;
+    if (y < 120 || over) b.classList.remove("header-hidden");
+    else if (y > lastScrollY + 6 && !(header && header.contains(document.activeElement))) b.classList.add("header-hidden");
+    else if (y < lastScrollY - 6) b.classList.remove("header-hidden");
+    lastScrollY = y;
   }
+  document.addEventListener("focusin", function (e) { var h = $("#site-header"); if (h && h.contains(e.target)) document.body.classList.remove("header-hidden"); });
+  /* The top bar's height, so the entrance photo fills exactly one screen under it */
+  function measureAnnounce() {
+    var a = $("#announce");
+    document.documentElement.style.setProperty("--announce-h", (a && !a.hidden ? a.offsetHeight : 0) + "px");
+  }
+  window.addEventListener("resize", measureAnnounce);
   var heroTick = false;
   window.addEventListener("scroll", function () {
     if (heroTick) return;

@@ -20,14 +20,17 @@ Oscar.config = {
     medium: "assets/img/hero/oscar-banner-1200.webp",
     small: "assets/img/hero/oscar-banner-mobile.webp", smallWidth: 700, smallHeight: 793
   },
-  // Full-screen photos at the top of the home page when there is no banner (slugs). Phones show the first one.
+  // The four full-screen category panels on the home page, two per screen: [category, the piece whose photo shows]
+  homePanels: [["maxi", "gilded-brocade-corset-gown"], ["couture", "lavender-beaded-gown"], ["short", "gold-sequin-drape-mini"], ["suits", "beaded-fringe-suit"]],
+
+  // Full-screen portraits at the top of the home page on phones (they slowly cross-fade); computers show the banner.
   heroProducts: ["noir-sequin-drape-gown", "ivory-lace-corset-gown", "plum-satin-sparkle-gown"],
   // Photo beside the "book a fitting" section on the home page.
   fittingProduct: "ivory-lace-corset-gown",
 
   // Shown while the site uses sample dresses, prices and placeholder photos.
   // Set to false once real products are loaded.
-  previewMode: true,
+  previewMode: false,
 
   phoneDisplay: "054-678-9446",
   phoneIntl: "972546789446",          // used for WhatsApp links (no + or spaces)
