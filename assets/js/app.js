@@ -304,16 +304,12 @@
           '<li><span dir="ltr" class="phone-number">' + esc(C.phoneDisplay) + "</span></li>" +
           '<li><a href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">WhatsApp</a></li>' +
           '<li><a href="' + esc(C.wazeUrl) + '" target="_blank" rel="noopener">' + esc(t("visit.waze")) + "</a></li>" +
-        "</ul>" +
-        '<div class="footer-tools">' +
-          selectBox("foot-lang", "js-lang", "lang.label", langOptions(), true) +
-          selectBox("foot-cur", "js-cur", "cur.label", curOptions(), true) +
-        "</div></div>" +
+        "</ul></div>" +
       "</div>" +
       '<div class="wrap footer-bottom">' +
         "<p>" + esc(t("footer.rights")) + "</p>" +
-        "<p>" + esc(t("footer.rates")) + " " + esc(rates) + " · " + esc(t("footer.ratesBy")) + ': <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">ExchangeRate-API</a></p>' +
-        (C.previewMode ? "<p>" + esc(t("preview")) + "</p>" : "") + tester +
+        /* Only for visitors who switched to another currency (the free rates service asks to be credited where its rates are shown) */
+        (O.state.currency !== "ILS" ? "<p>" + esc(t("footer.rates")) + ' <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">ExchangeRate-API</a> · ' + esc(rates) + "</p>" : "") + tester +
       "</div>";
   }
 
@@ -402,7 +398,7 @@
       '<div class="drawer-foot">' +
         (saved > 0 ? '<div class="sum-row sum-save"><span>' + esc(t("cart.savings")) + "</span><span>" + O.currency.html(saved) + "</span></div>" : "") +
         '<div class="sum-row"><span>' + esc(t("cart.subtotal")) + "</span><span>" + O.currency.html(sub) + "</span></div>" +
-        '<p class="note">' + (O.state.currency !== "ILS" ? '<span dir="ltr">' + esc(O.currency.ils(sub)) + "</span> · " + esc(t("price.note")) : esc(t("checkout.charged"))) + "</p>" +
+        (O.state.currency !== "ILS" ? '<p class="note"><span dir="ltr">' + esc(O.currency.ils(sub)) + "</span> · " + esc(t("price.note")) + "</p>" : "") +
         '<a class="btn btn-block" href="#checkout">' + esc(t("cart.checkout")) + "</a>" +
       "</div>" : "";
     $("#cart-dialog").innerHTML =
@@ -750,7 +746,7 @@
         '<p class="result-count" id="shop-count" aria-live="polite"></p>' +
       "</div>" +
       '<div id="shop-grid"></div>' +
-      '<p class="note page-note">' + esc(t("price.note")) + "</p>" +
+      (O.state.currency !== "ILS" ? '<p class="note page-note">' + esc(t("price.note")) + "</p>" : '<div class="page-note"></div>') +
     "</div>";
   };
 
@@ -899,7 +895,7 @@
               '</p><p><a class="text-link" href="#policies">' + esc(t("product.policies")) + "</a></p></div></details>" +
           "</div>" +
           '<a class="text-link" href="' + wa(t("wa.askProduct", { name: refName(p) })) + '" target="_blank" rel="noopener">' + esc(t("product.ask")) + "</a>" +
-          '<p class="note">' + esc(t("price.note")) + "</p>" +
+          (O.state.currency !== "ILS" ? '<p class="note">' + esc(t("price.note")) + "</p>" : "") +
         "</div>" +
       "</div>" +
       '<section class="section section-related" aria-labelledby="rel-title"><div class="section-head"><h2 id="rel-title">' + esc(t("product.related")) + "</h2></div>" +
@@ -961,7 +957,7 @@
       }).join("") + "</ul>" + promoPart +
       (saved > 0 ? '<div class="sum-row sum-save"><span>' + esc(t("cart.savings")) + '</span><span dir="ltr" class="price">' + esc(O.currency.ils(saved)) + "</span></div>" : "") +
       '<div class="sum-row"><span>' + esc(t("checkout.total")) + '</span><span dir="ltr" class="price">' + esc(O.currency.ils(sub)) + "</span></div>" +
-      '<p class="note">' + esc(t("checkout.charged")) + (O.state.currency !== "ILS" ? " · " + O.currency.html(sub) : "") + "</p></aside>";
+      (O.state.currency !== "ILS" ? '<p class="note">' + esc(t("checkout.charged")) + " · " + O.currency.html(sub) + "</p>" : "") + "</aside>";
 
     var main;
     if (s.ready) {
