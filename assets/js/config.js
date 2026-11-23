@@ -6,6 +6,9 @@ window.Oscar = window.Oscar || {};
 Oscar.config = {
   storeName: "OSCAR",
 
+  // Website design and development credit (footer, policies page and the page's author tag)
+  siteDesigner: "AVI SHINI",
+
   // Path or URL of the logo image. Leave empty to show the text wordmark.
   logo: "assets/img/logo/logo-wordmark-black.png",
 

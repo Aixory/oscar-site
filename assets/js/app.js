@@ -307,7 +307,8 @@
         "</ul></div>" +
       "</div>" +
       '<div class="wrap footer-bottom">' +
-        "<p>" + esc(t("footer.rights")) + "</p>" +
+        "<p>" + esc(t("footer.rights", { year: new Date().getFullYear() })) + "</p>" +
+        '<p class="credit">' + esc(t("footer.credit", { name: "§" })).replace("§", '<span dir="ltr" lang="en">' + esc(C.siteDesigner) + "</span>") + "</p>" +
         /* Only for visitors who switched to another currency (the free rates service asks to be credited where its rates are shown) */
         (O.state.currency !== "ILS" ? "<p>" + esc(t("footer.rates")) + ' <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">ExchangeRate-API</a> · ' + esc(rates) + "</p>" : "") + tester +
       "</div>";
@@ -1071,7 +1072,7 @@
     return '<div class="wrap">' +
       '<div class="page-head">' + crumbs([[t("crumb.home"), "#"], [t("pol.title"), ""]]) + '<h1 tabindex="-1">' + esc(t("pol.title")) + "</h1></div>" +
       '<div class="prose">' +
-        parts.map(function (p) { var own = custom[p[0]] ? tx(custom[p[0]]) : ""; return "<h2>" + esc(t(p[1])) + "</h2>" + paras(own || t(p[2])); }).join("") +
+        parts.map(function (p) { var own = custom[p[0]] ? tx(custom[p[0]]) : ""; return "<h2>" + esc(t(p[1])) + "</h2>" + paras(own || t(p[2])) + (p[0] === "terms" ? paras(t("pol.ip")) : ""); }).join("") +
       "</div></div>";
   };
 

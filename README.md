@@ -1,5 +1,7 @@
 # OSCAR Boutique — website
 
+Website design and development: **AVI SHINI**. © OSCAR Boutique, all rights reserved.
+
 The online store for OSCAR, evening dresses and designer wear, Herzl 73, Ramla.
 
 It works in two parts:

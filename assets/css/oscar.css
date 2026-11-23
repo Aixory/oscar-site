@@ -888,3 +888,4 @@ body.at-hero .contact-btn:hover { background: #FFFFFF; color: #111111; border-co
 :lang(ar) .hero-title, :lang(ar) .page-head h1, :lang(ar) .pdp-info h1, :lang(ar) .split-copy h2, :lang(ar) .about-copy h2 { letter-spacing: 0; }
 /* The values strip: three short statements under a hairline, centred on wide screens */
 @media (min-width: 760px) { .value { text-align: center; justify-items: center; border-top-color: var(--line-strong); } }
+.footer-bottom .credit { color: var(--ink-fg); opacity: .8; }
