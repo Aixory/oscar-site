@@ -24,20 +24,19 @@
     "address": {"@type": "PostalAddress", "streetAddress": "הרצל 73", "addressLocality": "רמלה", "addressCountry": "IL"},
     "sameAs": ["https://www.instagram.com/oscar_boutique_ramle/"]}
   </script>
-  <link rel="icon" type="image/png" href="assets/img/logo/favicon-64.png">
-  <link rel="apple-touch-icon" href="assets/img/logo/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="assets/img/logo/favicon-mono-64.png">
+  <link rel="apple-touch-icon" href="assets/img/logo/apple-touch-icon-mono.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Heebo:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Heebo:wght@300;400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="assets/css/oscar.css">
 </head>
 <body>
 <!--OSCAR:BODY-->
-  <!-- Opening: a seam is stitched down the page, then it opens and the site shows. Once per visit; skipped with reduced motion. -->
+  <!-- Opening: the OSCAR mark on a clean page for about a second, then the site fades in. Once per visit; skipped with reduced motion.
+       The logo loads only when the opening actually shows. -->
   <div class="intro" id="intro" aria-hidden="true" hidden>
-    <div class="intro-half intro-a"><div class="intro-inner"><img class="intro-logo" src="assets/img/logo/logo-full.png" alt="" width="354" height="480"><p class="intro-tag"></p></div></div>
-    <div class="intro-half intro-b"><div class="intro-inner"><img class="intro-logo" src="assets/img/logo/logo-full.png" alt="" width="354" height="480"><p class="intro-tag"></p></div></div>
-    <div class="intro-seam"></div>
+    <div class="intro-inner"><img class="intro-logo" data-src="assets/img/logo/logo-full-mono.png" alt="" width="354" height="480"><p class="intro-tag"></p></div>
   </div>
   <script>
     (function () {
@@ -48,11 +47,12 @@
         var a = JSON.parse(window.localStorage.getItem("oscar.a11y") || "{}");
         if (a && a.still) return;
       } catch (e) { /* no saved settings */ }
+      var logo = el.querySelector("img[data-src]");
+      if (logo) logo.src = logo.getAttribute("data-src");
       el.hidden = false;
       document.documentElement.classList.add("intro-hold");
     })();
   </script>
-  <div class="curtain" id="curtain" aria-hidden="true" hidden><img src="assets/img/logo/logo-wordmark.png" alt="" width="296" height="120"></div>
   <a class="skip-link" href="#content" id="skip-link">דילוג לתוכן</a>
   <div class="announce"><div class="wrap" id="announce"></div></div>
 

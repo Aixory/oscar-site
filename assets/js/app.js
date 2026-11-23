@@ -46,7 +46,9 @@
     chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-6.5-5.8-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.2"/></svg>',
     phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 3.5h3l1.5 4.2-2 1.4a11 11 0 0 0 5.8 5.8l1.4-2 4.2 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg>',
-    arch: '<svg viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2.5 31V12a9.5 9.5 0 0 1 19 0v19"/><path d="M6.5 31V13a5.5 5.5 0 0 1 11 0v18"/></svg>'
+    calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4.5 6.5h15v13h-15z"/><path d="M4.5 10.5h15M8.5 4v4M15.5 4v4"/></svg>',
+    /* The WhatsApp glyph (Simple Icons, CC0), drawn in the site's own black and white */
+    whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.89 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41"/></svg>'
   };
   var SIZES = {
     card: "(min-width: 1100px) 25vw, (min-width: 720px) 33vw, 50vw",
@@ -90,7 +92,7 @@
   /* Desktop header: evening dresses (with its sub-menu), suits, jumpsuits, SALE. */
   function navDesktop() {
     return O.menu.map(function (id) {
-      if (id === "sale") return '<a href="#shop-sale" class="nav-sale">' + esc(t("cat.sale")) + "</a>";
+      if (id === "sale") return '<a href="#shop-sale">' + esc(t("cat.sale")) + "</a>";
       var c = O.data.category(id);
       if (!c) return "";
       if (!c.children) return '<a href="#shop-' + id + '">' + esc(t(c.key)) + "</a>";
@@ -98,7 +100,7 @@
       var used = {};
       var shots = [id].concat(c.children).map(function (cid) {
         var look = lookFor(cid, used);
-        return look ? '<img src="' + esc(O.cutout(look.slug, 640)) + '" alt="" width="' + look.w[0] + '" height="640" loading="lazy" decoding="async" data-pv="' + cid + '" style="--pv-bg:' + look.bg + '"' + (cid === id ? ' class="on"' : "") + ">" : "";
+        return look ? '<img src="' + esc(O.cutout(look.slug, 640)) + '" alt="" width="' + look.w[0] + '" height="640" loading="lazy" decoding="async" data-pv="' + cid + '"' + (cid === id ? ' class="on"' : "") + ">" : "";
       }).join("");
       return '<div class="nav-drop">' +
         '<a href="#shop-' + id + '">' + esc(t(c.key)) + "</a>" +
@@ -120,7 +122,7 @@
   /* Side menu: the same tree, with the sub-menu open. */
   function menuTree() {
     return O.menu.map(function (id) {
-      if (id === "sale") return '<li><a href="#shop-sale" class="menu-sale">' + esc(t("cat.sale")) + "</a></li>";
+      if (id === "sale") return '<li><a href="#shop-sale">' + esc(t("cat.sale")) + "</a></li>";
       var c = O.data.category(id);
       if (!c) return "";
       if (!c.children) return catLinks([id]);
@@ -129,11 +131,11 @@
         '<ul class="menu-sub" id="menu-sub-' + id + '">' + catLinks(c.children) + "</ul></li>";
     }).join("");
   }
-  function contactLinks() {
-    return '<div class="btn-row contact-quick">' +
-      '<a class="btn" href="' + esc(C.wazeUrl) + '" target="_blank" rel="noopener">' + ICON.pin + esc(t("visit.waze")) + "</a>" +
-      '<a class="btn btn-ghost" href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">' + ICON.chat + "WhatsApp</a>" +
-    "</div>";
+  /* Which photo leads: the plain-backdrop studio shot when a piece has one, so every grid reads as one shoot. */
+  function leadPhoto(p) {
+    var imgs = p.images || [];
+    for (var i = 0; i < imgs.length; i++) if (/-studio-/.test(imgs[i])) return i;
+    return 0;
   }
   function soldOutAll(p) { return O.stock.soldOut(p); }
   function sizeLabel(s) { return s === "ONE" ? t("product.oneSize") : s; }
@@ -260,7 +262,7 @@
         "</div>" +
         wordmark() +
         '<div class="header-end">' +
-          '<a class="contact-btn" href="#contact" aria-label="' + esc(t("nav.contact")) + '">' + ICON.pin + '<span class="contact-label" aria-hidden="true">' + esc(t("nav.contact")) + "</span></a>" +
+          '<a class="contact-btn" href="#book" aria-label="' + esc(t("nav.book")) + '">' + ICON.calendar + '<span class="contact-label" aria-hidden="true">' + esc(t("nav.book")) + "</span></a>" +
           selectBox("lang-select", "js-lang", "lang.label", langOptions()) +
           selectBox("cur-select", "js-cur", "cur.label", curOptions()) +
           '<button class="icon-btn" id="cart-btn" type="button" aria-haspopup="dialog" aria-controls="cart-dialog">' + ICON.bag +
@@ -289,7 +291,7 @@
     var rates = O.currency.live && O.currency.updated ? t("footer.ratesLive", { date: fmtDate(O.currency.updated) }) : t("footer.ratesApprox");
     $("#site-footer").innerHTML =
       '<div class="wrap footer-inner">' +
-        '<div class="footer-brand"><img class="footer-logo" src="assets/img/logo/logo-wordmark-tagline.png" alt="OSCAR · ' + esc(t("hero.eyebrow").split(" · ")[0]) + '" width="380" height="200" loading="lazy"><p>' + esc(t("hero.lead")) + "</p></div>" +
+        '<div class="footer-brand"><img class="footer-logo" src="assets/img/logo/logo-wordmark-tagline-black.png" alt="OSCAR · ' + esc(t("hero.eyebrow").split(" · ")[0]) + '" width="380" height="200" loading="lazy"><p>' + esc(t("footer.brand")) + "</p></div>" +
         '<nav class="footer-col" aria-labelledby="f-shop"><h2 id="f-shop">' + esc(t("nav.shop")) + "</h2><ul>" + cats + "</ul></nav>" +
         '<nav class="footer-col" aria-labelledby="f-info"><h2 id="f-info">' + esc(t("footer.links")) + "</h2><ul>" +
           '<li><a href="#contact">' + esc(t("nav.contact")) + "</a></li>" +
@@ -303,7 +305,7 @@
           '<li><a href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">WhatsApp</a></li>' +
           '<li><a href="' + esc(C.wazeUrl) + '" target="_blank" rel="noopener">' + esc(t("visit.waze")) + "</a></li>" +
         "</ul>" +
-        '<div class="footer-tools" style="margin-block-start:1.25rem">' +
+        '<div class="footer-tools">' +
           selectBox("foot-lang", "js-lang", "lang.label", langOptions(), true) +
           selectBox("foot-cur", "js-cur", "cur.label", curOptions(), true) +
         "</div></div>" +
@@ -316,12 +318,14 @@
   }
 
   function renderFloats() {
-    $("#a11y-btn").innerHTML = ICON.access + '<span class="float-label">' + esc(t("a11y.open")) + "</span>";
+    $("#a11y-btn").innerHTML = ICON.access;
     $("#a11y-btn").setAttribute("aria-label", t("a11y.open"));
+    $("#a11y-btn").title = t("a11y.open");
     var w = $("#wa-float");
     w.href = wa(t("wa.hello"));
     w.setAttribute("aria-label", t("wa.float"));
-    w.innerHTML = ICON.chat + '<span class="float-label">WhatsApp</span>';
+    w.title = "WhatsApp";
+    w.innerHTML = ICON.whatsapp;
   }
 
   function renderMenu() {
@@ -332,13 +336,13 @@
           '<nav aria-label="' + esc(t("nav.main")) + '"><ul class="menu-links">' +
             '<li><a href="#">' + esc(t("nav.home")) + "</a></li>" + menuTree() +
           "</ul></nav>" +
-          '<a class="btn btn-block menu-contact" href="#contact">' + ICON.pin + esc(t("nav.contact")) + "</a>" +
+          '<ul class="menu-links small"><li><a href="#contact">' + esc(t("nav.contact")) + "</a></li></ul>" +
+          '<a class="btn btn-block menu-contact" href="#book">' + esc(t("nav.book")) + "</a>" +
           '<div class="menu-tools">' +
             selectBox("menu-lang", "js-lang", "lang.label", langOptions(), true) +
             selectBox("menu-cur", "js-cur", "cur.label", curOptions(), true) +
           "</div>" +
           '<p class="note">' + esc(tx(C.address)) + ' · <span dir="ltr">' + esc(C.phoneDisplay) + "</span></p>" +
-          '<p class="tailor-note">' + ICON.scissors + "<span>" + esc(t("tailor.short")) + "</span></p>" +
         "</div>" +
       "</div>";
   }
@@ -437,20 +441,20 @@
   }
 
   /* ───────────── Product card ───────────── */
+  /* A card is a photo, a name and a price. One quiet label at most ("sold out" or "new");
+     a sale shows only as the struck-through old price, never as a red badge. */
   function card(p) {
-    var badges = [], out = soldOutAll(p), f = O.pricing.final(p, false), low = O.stock.lowLeft(p);
-    if (out) badges.push('<span class="badge">' + esc(t("badge.soldout")) + "</span>");
-    else if (f.percent > 0) badges.push('<span class="badge badge-sale"><span aria-hidden="true" dir="ltr">−' + f.percent + '%</span><span class="sr-only">' + esc(t("sale.off", { n: f.percent })) + "</span></span>");
-    if (p.isNew && badges.length < 2) badges.push('<span class="badge">' + esc(t("badge.new")) + "</span>");
+    var out = soldOutAll(p), f = O.pricing.final(p, false), lead = leadPhoto(p);
+    var label = out ? t("badge.soldout") : p.isNew ? t("badge.new") : "";
+    var alt = p.images && p.images.length > 1 ? (lead === 0 ? 1 : 0) : -1;
     return '<article class="card reveal">' +
-      '<div class="card-media">' + O.art.render(p, 0, { sizes: SIZES.card }) +
-        /* A second photo, when there is one, shows on hover */
-        (p.images && p.images.length > 1 ? O.art.photo(p, 1, { decorative: true, sizes: SIZES.card }).replace('class="art-img"', 'class="art-img art-alt"') : "") +
-        (badges.length ? '<div class="card-badges">' + badges.join("") + "</div>" : "") + "</div>" +
+      '<div class="card-media">' + O.art.render(p, lead, { sizes: SIZES.card }) +
+        /* The other photo (the boutique shot) shows on hover */
+        (alt >= 0 ? O.art.photo(p, alt, { decorative: true, sizes: SIZES.card }).replace('class="art-img"', 'class="art-img art-alt"') : "") +
+        (label ? '<div class="card-badges"><span class="badge">' + esc(label) + "</span></div>" : "") + "</div>" +
       '<div class="card-body">' +
         '<h3 class="card-name"><a href="#p-' + esc(p.slug) + '" data-card>' + esc(tx(p.name)) + "</a></h3>" +
         '<p class="card-price">' + amountHTML(f.price, f.original) + "</p>" +
-        (low ? '<p class="card-stock">' + esc(stockText(low)) + "</p>" : "") +
       "</div></article>";
   }
 
@@ -486,8 +490,7 @@
       '<p class="lb-meta">' + esc(tx(p.color)) +
         (sizes ? ' · ' + esc(t("lb.sizes", { sizes: "§" })).replace("§", '<span dir="ltr">' + esc(sizes) + "</span>") : "") + "</p>" +
       '<p class="lb-price">' + amountHTML(f.price, f.original) + "</p>" +
-      '<div class="btn-row"><a class="btn" href="#p-' + esc(p.slug) + '">' + esc(t("lb.view")) + "</a>" +
-        '<a class="btn btn-ghost" href="' + wa(t("wa.askProduct", { name: refName(p) })) + '" target="_blank" rel="noopener">' + ICON.chat + esc(t("lb.ask")) + "</a></div>";
+      '<div class="btn-row"><a class="btn" href="#p-' + esc(p.slug) + '">' + esc(t("lb.view")) + "</a></div>";
   }
   function lookbookHTML() {
     var looks = lookbookLooks(), n = looks.length;
@@ -502,14 +505,15 @@
     }).join("");
     var strip = looks.map(function (y, k) {
       return '<button type="button" class="lb-thumb" data-lb="' + k + '"' + (k === i ? ' aria-current="true"' : "") +
-        ' aria-label="' + esc(t("lb.pick", { n: k + 1, name: tx(y.p.name) })) + '" style="--pv-bg:' + y.look.bg + '">' +
+        ' aria-label="' + esc(t("lb.pick", { n: k + 1, name: tx(y.p.name) })) + '">' +
         '<img src="' + esc(O.cutout(y.look.slug, 640)) + '" alt="" width="' + y.look.w[0] + '" height="640" loading="lazy" decoding="async" draggable="false"></button>';
     }).join("");
     var arrow = function (d) {
       return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' +
         (d > 0 ? "M5 12h14m-5-5 5 5-5 5" : "M19 12H5m5-5-5 5 5 5") + '"/></svg>';
     };
-    return '<section class="lookbook' + (x.look.dark ? " lb-dark" : "") + '" id="lookbook" aria-roledescription="carousel" aria-label="' + esc(t("lb.label", { n: n })) + '" style="--lb-bg:' + x.look.bg + '">' +
+    /* One quiet stage for every piece (the site's own off-white, or near-black at night), so the dresses carry the colour */
+    return '<section class="lookbook" id="lookbook" aria-roledescription="carousel" aria-label="' + esc(t("lb.label", { n: n })) + '">' +
       '<div class="wrap lb-grid">' +
         '<div class="lb-head"><p class="eyebrow">' + esc(t("lb.eyebrow")) + '</p><h2 class="lb-title">' + esc(t("lb.title")) + '</h2><p class="lb-lead">' + esc(t("lb.lead")) + "</p></div>" +
         '<div class="lb-stage" id="lb-stage" tabindex="0" aria-describedby="lb-hint">' +
@@ -553,8 +557,6 @@
       });
       if (!announceIt) return;
       var x = this.looks[i], f = O.pricing.final(x.p, false);
-      this.sec.style.setProperty("--lb-bg", x.look.bg);
-      this.sec.classList.toggle("lb-dark", !!x.look.dark);
       var word = $(".lb-word", this.sec);
       word.innerHTML = '<span class="lb-word-in">' + esc(tx(x.p.color)) + "</span>";
       $("#lb-detail").innerHTML = lookDetail(x, i, n);
@@ -640,11 +642,11 @@
       document.addEventListener("keydown", skip, { once: true });
       setTimeout(skip, 6000); // never hold the site back for long
     },
-    /* Called once the first page is on screen. Keeps the opening on for at least ~2.3 s from page start. */
+    /* Called once the first page is on screen. The mark shows for about a second, then the page fades in. */
     ready: function () {
       if (!this.el) return;
       var self = this, since = window.performance && performance.now ? performance.now() : 0;
-      setTimeout(function () { self.open(); }, Math.max(0, 2300 - since));
+      setTimeout(function () { self.open(); }, Math.max(0, 1300 - since));
     },
     open: function () {
       var el = this.el;
@@ -653,7 +655,7 @@
       try { window.sessionStorage.setItem("oscar.intro", "1"); } catch (e) { /* storage unavailable */ }
       document.documentElement.classList.remove("intro-hold");
       el.classList.add("open");
-      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1300);
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 900);
     }
   };
 
@@ -668,8 +670,8 @@
       var list = O.data.inCategory(c.id);
       var p = list.filter(function (x) { return !used[x.slug]; })[0] || list[0];
       if (p) used[p.slug] = true;
-      return '<a class="tile reveal" href="#shop-' + c.id + '">' + (p ? O.art.render(p, 0, { decorative: true, sizes: SIZES.tile }) : "") +
-        '<span class="tile-label"><span class="tile-name">' + esc(t(c.key)) + '</span><span class="tile-count">' + esc(t("home.pieces", { n: list.length })) + "</span></span></a>";
+      return '<a class="tile reveal" href="#shop-' + c.id + '"><span class="tile-media">' + (p ? O.art.render(p, leadPhoto(p), { decorative: true, sizes: SIZES.tile }) : "") + "</span>" +
+        '<span class="tile-label"><span class="tile-name">' + esc(t(c.key)) + "</span></span></a>";
     }).join("");
     var splitP = O.data.bySlug(C.fittingProduct) || heroes[0];
     var splitSrc = splitP && splitP.images && splitP.images[0] ? splitP.images[0].replace(/-1080\.webp$/, "-hero.webp") : "";
@@ -692,7 +694,7 @@
           '<p class="eyebrow">' + esc(t("hero.eyebrow")) + "</p>" +
           '<h1 class="hero-title" id="hero-title" tabindex="-1">' + brandify(t("hero.title")) + "</h1>" +
           '<p class="hero-lead">' + esc(t("hero.lead")) + "</p>" +
-          '<div class="hero-actions"><a class="btn btn-light" href="#shop">' + esc(t("hero.shop")) + '</a><a class="btn btn-outline-light" href="#contact">' + esc(t("nav.contact")) + "</a></div>" +
+          '<div class="hero-actions"><a class="btn btn-light" href="#shop">' + esc(t("hero.shop")) + '</a><a class="btn btn-outline-light" href="#book">' + esc(t("nav.book")) + "</a></div>" +
         "</div>" +
       "</section>" +
 
@@ -703,7 +705,7 @@
         '<div class="grid grid-4">' + newOnes.map(card).join("") + "</div>" +
       "</div></section>" +
 
-      '<section class="section" style="padding-block-start:0" aria-labelledby="col-title"><div class="wrap">' +
+      '<section class="section section-tight" aria-labelledby="col-title"><div class="wrap">' +
         '<div class="section-head"><div><h2 id="col-title">' + esc(t("home.collections")) + '</h2><p class="lead">' + esc(t("home.collectionsLead")) + "</p></div></div>" +
         '<div class="tiles">' + tiles + "</div>" +
       "</div></section>" +
@@ -711,11 +713,11 @@
       '<section class="split" aria-labelledby="fit-title">' +
         '<div class="split-media">' + (splitSrc ? '<img src="' + esc(splitSrc) + '" alt="" width="1000" height="1500" loading="lazy" decoding="async">' : "") + "</div>" +
         '<div class="split-copy">' +
-          '<p class="eyebrow eyebrow-icon">' + ICON.scissors + esc(t("tailor.title")) + "</p>" +
+          '<p class="eyebrow">' + esc(t("tailor.title")) + "</p>" +
           '<h2 id="fit-title">' + esc(t("home.fitTitle")) + "</h2>" +
           "<p>" + esc(t("home.fitText")) + "</p>" +
-          '<div class="btn-row"><a class="btn" href="' + wa(t("wa.hello") + " " + t("wa.fitTitle")) + '" target="_blank" rel="noopener">' + ICON.chat + esc(t("home.fitCta")) + "</a>" +
-          '<a class="btn btn-ghost" href="' + esc(C.wazeUrl) + '" target="_blank" rel="noopener">' + ICON.pin + esc(t("visit.waze")) + "</a></div>" +
+          '<div class="btn-row"><a class="btn" href="#book">' + esc(t("nav.book")) + "</a>" +
+          '<a class="btn btn-ghost" href="' + wa(t("wa.hello") + " " + t("wa.fitTitle")) + '" target="_blank" rel="noopener">' + ICON.whatsapp + "WhatsApp</a></div>" +
           '<dl class="facts">' +
             "<div><dt>" + esc(t("visit.address")) + "</dt><dd>" + esc(tx(C.address)) + "</dd></div>" +
             "<div><dt>" + esc(t("visit.phone")) + '</dt><dd><span dir="ltr" class="phone-number">' + esc(C.phoneDisplay) + "</span></dd></div>" +
@@ -727,7 +729,7 @@
 
       '<section class="section" aria-label="OSCAR"><div class="wrap"><div class="values">' + values + "</div></div></section>" +
 
-      '<section class="section" style="padding-block-start:0" aria-labelledby="ig-title"><div class="wrap"><div class="ig">' +
+      '<section class="section section-tight" aria-labelledby="ig-title"><div class="wrap"><div class="ig">' +
         '<div><h2 id="ig-title">' + esc(t("home.igTitle")) + "</h2><p>" + esc(t("home.igText")) + "</p></div>" +
         '<a class="ig-handle" href="' + esc(C.instagram) + '" target="_blank" rel="noopener" dir="ltr">' + esc(C.instagramHandle) + "</a>" +
       "</div></div></section>";
@@ -748,7 +750,7 @@
         '<p class="result-count" id="shop-count" aria-live="polite"></p>' +
       "</div>" +
       '<div id="shop-grid"></div>' +
-      '<p class="note" style="margin-block:2.5rem 4rem">' + esc(t("price.note")) + "</p>" +
+      '<p class="note page-note">' + esc(t("price.note")) + "</p>" +
     "</div>";
   };
 
@@ -759,7 +761,7 @@
       return '<a class="chip' + (extra || "") + '" href="' + href + '"' + (cat === id ? ' aria-current="page"' : "") + ">" + esc(label) + "</a>";
     }
     var top = [chip("all", t("cat.all"))].concat(O.menu.map(function (id) {
-      if (id === "sale") return chip("sale", t("cat.sale"), " chip-sale");
+      if (id === "sale") return chip("sale", t("cat.sale"));
       var c = O.data.category(id);
       var inGroup = c && c.children && (cat === id || c.children.indexOf(cat) !== -1);
       return c ? chip(id, t(c.key), inGroup && cat !== id ? " chip-parent" : "") : "";
@@ -794,7 +796,7 @@
       ? '<h2 class="sr-only">' + esc(t("shop.results", { n: list.length })) + '</h2><div class="grid">' + list.map(card).join("") + "</div>"
       : O.state.shop.q.trim()
         ? '<div class="empty"><p>' + esc(t("shop.none")) + '</p><button type="button" class="btn btn-ghost" data-clear-search>' + esc(t("shop.clear")) + "</button></div>"
-        : '<div class="empty"><p>' + esc(t("cat.empty")) + '</p><a class="btn btn-ghost" href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">' + ICON.chat + "WhatsApp</a></div>";
+        : '<div class="empty"><p>' + esc(t("cat.empty")) + '</p><a class="btn btn-ghost" href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">' + ICON.whatsapp + "WhatsApp</a></div>";
   }
 
   function updateShopInPlace() {
@@ -817,7 +819,8 @@
     var hasPhotos = p.images && p.images.length > 0;
     var gallery;
     if (hasPhotos) {
-      var idx = Math.min(O.state.pdpImage || 0, p.images.length - 1);
+      /* Opens on the same photo as its card (the studio shot when there is one) */
+      var idx = O.state.pdpImage === null || O.state.pdpImage === undefined ? leadPhoto(p) : Math.min(O.state.pdpImage, p.images.length - 1);
       gallery = '<button type="button" class="pdp-media zoomable" id="pdp-art" aria-pressed="false" aria-label="' + esc(t("product.zoom") + ": " + name) + '" style="view-transition-name: oscar-art">' +
         O.art.render(p, idx, { eager: true, sizes: SIZES.main }) + "</button>";
       if (p.images.length > 1) {
@@ -861,32 +864,34 @@
     related = related.slice(0, 4);
 
     return '<div class="wrap">' +
-      '<div style="padding-block-start:1.5rem">' + crumbs([[t("crumb.home"), "#"], [t("shop.title"), "#shop"]].concat(catTrail(primaryCat(p)).map(function (id) { return [catLabel(id), "#shop-" + id]; })).concat([[name, ""]])) + "</div>" +
+      '<div class="pdp-crumbs">' + crumbs([[t("crumb.home"), "#"], [t("shop.title"), "#shop"]].concat(catTrail(primaryCat(p)).map(function (id) { return [catLabel(id), "#shop-" + id]; })).concat([[name, ""]])) + "</div>" +
       '<div class="pdp">' +
         '<div class="gallery">' + gallery + "</div>" +
         '<div class="pdp-info">' +
-          '<p class="eyebrow">' + esc(p.categories.filter(function (c) { return !!O.data.category(c); }).map(catLabel).join(" · ")) + "</p>" +
-          '<h1 tabindex="-1">' + esc(name) + "</h1>" +
-          '<div class="pdp-price">' + amountHTML(fp.price, fp.original, { withIls: true }) +
-            (allOut ? ' <span class="badge">' + esc(t("badge.soldout")) + "</span>" : fp.percent > 0 ? ' <span class="badge badge-sale" aria-hidden="true" dir="ltr">−' + fp.percent + "%</span>" : "") + "</div>" +
-          saleNote +
-          (low ? '<p class="stock-note">' + esc(stockText(low)) + "</p>" : "") +
+          '<div class="pdp-head">' +
+            '<p class="eyebrow">' + esc(catLabel(primaryCat(p))) + (p.id ? ' · <span class="pdp-ref"><span class="sr-only">' + esc(t("product.ref")) + ' </span><span dir="ltr">#' + p.id + "</span></span>" : "") + "</p>" +
+            '<h1 tabindex="-1">' + esc(name) + "</h1>" +
+            '<div class="pdp-price">' + amountHTML(fp.price, fp.original, { withIls: true }) +
+              (allOut ? ' <span class="badge">' + esc(t("badge.soldout")) + "</span>" : "") + "</div>" +
+            saleNote +
+          "</div>" +
           '<p class="pdp-desc">' + esc(tx(p.description)) + "</p>" +
           '<p class="meta-line"><span>' + esc(t("product.color")) + ":</span> " + esc(tx(p.color)) + "</p>" +
-           (p.id ? '<p class="meta-line"><span>' + esc(t("product.ref")) + ':</span> <span dir="ltr">#' + p.id + "</span></p>" : "") + swatches +
+          swatches +
           '<form id="pdp-form" novalidate data-slug="' + esc(p.slug) + '">' +
             '<fieldset class="sizes" id="size-set">' +
               "<legend><span>" + esc(t("product.size")) + "</span></legend>" +
               '<div class="size-options">' + sizes + "</div>" +
               '<p class="size-note" id="size-note" aria-live="polite"></p>' +
+              (low ? '<p class="stock-note">' + esc(stockText(low)) + "</p>" : "") +
               '<p class="field-error" id="size-error" hidden></p>' +
             "</fieldset>" +
-            '<div class="pdp-actions" style="margin-block-start:1.25rem">' +
-              '<button class="btn btn-block" type="submit" id="add-btn"' + (allOut ? " disabled" : "") + ">" + ICON.bag + esc(t("product.add")) + "</button>" +
+            '<div class="pdp-actions">' +
+              '<button class="btn btn-block" type="submit" id="add-btn"' + (allOut ? " disabled" : "") + ">" + esc(t("product.add")) + "</button>" +
               '<a class="btn btn-ghost btn-block" href="' + wa(t("wa.fitProduct", { name: refName(p) })) + '" target="_blank" rel="noopener">' + esc(t("product.fit")) + "</a>" +
             "</div>" +
           "</form>" +
-          '<p class="tailor-note">' + ICON.scissors + "<span>" + esc(t("tailor.short")) + "</span></p>" +
+          '<p class="tailor-line">' + ICON.scissors + "<span>" + esc(t("tailor.short")) + "</span></p>" +
           '<div class="accordion">' +
             "<details><summary>" + esc(t("product.sizeGuide")) + '</summary><div class="acc-body">' + chart + "</div></details>" +
             "<details><summary>" + esc(t("product.care")) + '</summary><div class="acc-body"><p>' + esc(t("product.careText")) + "</p></div></details>" +
@@ -897,7 +902,7 @@
           '<p class="note">' + esc(t("price.note")) + "</p>" +
         "</div>" +
       "</div>" +
-      '<section class="section" aria-labelledby="rel-title" style="padding-block-start:1rem"><div class="section-head"><h2 id="rel-title">' + esc(t("product.related")) + "</h2></div>" +
+      '<section class="section section-related" aria-labelledby="rel-title"><div class="section-head"><h2 id="rel-title">' + esc(t("product.related")) + "</h2></div>" +
         '<div class="grid grid-4">' + related.map(card).join("") + "</div></section>" +
     "</div>";
   };
@@ -924,7 +929,7 @@
     return '<div class="ready">' +
       '<h2 id="ready-title" tabindex="-1">' + esc(t(titleKey)) + "</h2>" +
       "<p>" + esc(t(textKey)) + "</p>" +
-      '<a class="btn" href="' + wa(message) + '" target="_blank" rel="noopener">' + ICON.chat + esc(t("checkout.openWa")) + "</a>" +
+      '<a class="btn" href="' + wa(message) + '" target="_blank" rel="noopener">' + ICON.whatsapp + esc(t("checkout.openWa")) + "</a>" +
       '<button type="button" class="link-btn" id="' + backId + '">' + esc(t("checkout.edit")) + "</button>" +
     "</div>";
   }
@@ -984,7 +989,7 @@
         "</fieldset>" +
         field("co-notes", "f.notes", s.notes, { textarea: true }) +
         "<fieldset><legend>" + esc(t("checkout.payment")) + '</legend><p class="callout">' + esc(t("checkout.payNote")) + "</p></fieldset>" +
-        '<button class="btn btn-block" type="submit">' + ICON.chat + esc(t("checkout.send")) + "</button>" +
+        '<button class="btn btn-block" type="submit">' + ICON.whatsapp + esc(t("checkout.send")) + "</button>" +
       "</form>";
     }
     return '<div class="wrap">' + head + '<div class="checkout-grid">' + main + summary + "</div></div>";
@@ -996,7 +1001,7 @@
     if (f.ready) {
       formPart = readyBlock("visit.ready", "visit.readyText", f.message, "fit-edit");
     } else {
-      formPart = '<h2 id="fit-form-title">' + esc(t("visit.fitTitle")) + '</h2><p class="note" style="margin-block:.5rem 1.5rem">' + esc(t("visit.fitLead")) + "</p>" +
+      formPart = '<h2 id="fit-form-title" tabindex="-1">' + esc(t("visit.fitTitle")) + '</h2><p class="note form-lead">' + esc(t("visit.fitLead")) + "</p>" +
         '<form id="fit-form" class="form" novalidate aria-labelledby="fit-form-title">' +
           '<div id="fit-errors"></div>' +
           '<div class="field-row">' +
@@ -1012,32 +1017,32 @@
             field("fit-size", "f.size", f.size, { inputmode: "numeric" }) +
           "</div>" +
           field("fit-notes", "f.notes", f.notes, { textarea: true }) +
-          '<button class="btn btn-block" type="submit">' + ICON.chat + esc(t("visit.send")) + "</button>" +
+          '<button class="btn btn-block" type="submit">' + ICON.whatsapp + esc(t("visit.send")) + "</button>" +
         "</form>";
     }
     return '<div class="wrap">' +
       '<div class="page-head">' + crumbs([[t("crumb.home"), "#"], [t("nav.contact"), ""]]) + '<h1 tabindex="-1">' + esc(t("nav.contact")) + "</h1>" +
-        '<p class="contact-line">' + ICON.pin + "<span>" + esc(tx(C.address)) + ' · <span dir="ltr">' + esc(C.phoneDisplay) + "</span></span></p>" + contactLinks() + "</div>" +
+        '<p class="contact-line">' + ICON.pin + "<span>" + esc(tx(C.address)) + ' · <span dir="ltr">' + esc(C.phoneDisplay) + "</span></span></p></div>" +
       '<section class="about" aria-labelledby="about-title">' +
-        '<img class="about-logo" src="assets/img/logo/logo-full.png" alt="OSCAR · ' + esc(t("hero.eyebrow").split(" · ")[0]) + '" width="354" height="480">' +
+        '<img class="about-logo" src="assets/img/logo/logo-full-mono.png" alt="OSCAR · ' + esc(t("hero.eyebrow").split(" · ")[0]) + '" width="354" height="480" loading="lazy">' +
         '<div class="about-copy"><h2 id="about-title">' + esc(t("contact.aboutTitle")) + "</h2><p>" + esc(t("contact.about")) + "</p>" +
           '<div class="tailor-card">' + ICON.scissors + "<div><h3>" + esc(t("tailor.title")) + "</h3><p>" + esc(t("tailor.text")) + "</p></div></div>" +
         "</div>" +
       "</section>" +
-      '<div class="visit-grid" style="padding-block-end:5rem">' +
+      '<div class="visit-grid">' +
         '<div class="info-list">' +
           '<div class="info-item"><h2>' + esc(t("contact.getHere")) + '</h2><p class="big">' + esc(tx(C.address)) + "</p>" +
-            '<div class="btn-row" style="margin-block-start:.5rem"><a class="btn" href="' + esc(C.wazeUrl) + '" target="_blank" rel="noopener">' + ICON.pin + esc(t("visit.waze")) + "</a>" +
+            '<div class="btn-row"><a class="btn btn-ghost" href="' + esc(C.wazeUrl) + '" target="_blank" rel="noopener">' + esc(t("visit.waze")) + "</a>" +
             '<a class="btn btn-ghost" href="' + esc(C.mapsUrl) + '" target="_blank" rel="noopener">' + esc(t("visit.maps")) + "</a></div></div>" +
           '<div class="info-item"><h2>' + esc(t("contact.write")) + "</h2>" +
             '<div class="phone-row"><p class="big phone-number" dir="ltr" id="phone-text">' + esc(C.phoneDisplay) + "</p>" +
-            '<button type="button" class="btn btn-ghost" id="copy-phone">' + esc(t("visit.copy")) + "</button></div>" +
-            '<div class="btn-row" style="margin-block-start:.5rem"><a class="btn" href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">' + ICON.chat + esc(t("visit.whatsapp")) + "</a>" +
-            '<a class="btn btn-ghost" href="tel:+' + C.phoneIntl + '">' + ICON.phone + esc(t("contact.call")) + "</a></div></div>" +
+            '<button type="button" class="link-btn" id="copy-phone">' + esc(t("visit.copy")) + "</button></div>" +
+            '<div class="btn-row"><a class="btn" href="' + wa(t("wa.hello")) + '" target="_blank" rel="noopener">' + ICON.whatsapp + esc(t("visit.whatsapp")) + "</a>" +
+            '<a class="btn btn-ghost" href="tel:+' + C.phoneIntl + '">' + esc(t("contact.call")) + "</a></div></div>" +
           '<div class="info-item"><h2>' + esc(t("visit.hours")) + "</h2>" + hoursHTML() + "</div>" +
           '<div class="info-item"><h2>' + esc(t("contact.follow")) + '</h2><a class="ig-handle" href="' + esc(C.instagram) + '" target="_blank" rel="noopener" dir="ltr">Instagram ' + esc(C.instagramHandle) + "</a></div>" +
         "</div>" +
-        '<section class="panel" aria-labelledby="' + (f.ready ? "ready-title" : "fit-form-title") + '">' + formPart + "</section>" +
+        '<section class="panel" id="fitting" aria-labelledby="' + (f.ready ? "ready-title" : "fit-form-title") + '">' + formPart + "</section>" +
       "</div></div>";
   };
 
@@ -1092,6 +1097,7 @@
     }
     if (h.indexOf("p-") === 0) return { view: "product", slug: h.slice(2) };
     if (h === "visit" || h === "about") return { view: "contact" };
+    if (h === "book") return { view: "contact", book: true };
     if (VIEW_PAGES.indexOf(h) !== -1) return { view: h };
     return { view: "notFound" };
   }
@@ -1116,14 +1122,14 @@
     closeDialogs();
     if (!opts.initial) hideToast();
     if (prev && prev.view === "shop" && r.view === "shop" && !opts.force) { O.state.route = r; updateShopInPlace(); return; }
-    if (r.view === "product" && (!prev || prev.slug !== r.slug)) { O.state.pdpView = "front"; O.state.pdpImage = 0; }
+    if (r.view === "product" && (!prev || prev.slug !== r.slug)) { O.state.pdpView = "front"; O.state.pdpImage = null; }
     if (r.view === "checkout" && prev && prev.view !== "checkout") O.state.checkout.ready = false;
     if (r.view === "contact" && prev && prev.view !== "contact") O.state.fitting.ready = false;
     O.state.route = r;
     var go = function () { renderView(opts); };
     var morph = O.state.morph; O.state.morph = false;
     if (!opts.transition || !O.motionOK()) { go(); return; }
-    /* A product card opening its page grows into the big photo; every other page change draws the curtain. */
+    /* A product card opening its page grows into the big photo; every other page simply fades in, with no wait. */
     if (morph && document.startViewTransition) {
       try {
         var vt = document.startViewTransition(go);
@@ -1131,28 +1137,14 @@
       } catch (e) { go(); }
       return;
     }
-    curtain(go);
+    go();
+    var main = $("#content");
+    main.classList.remove("page-in");
+    void main.offsetWidth;
+    main.classList.add("page-in");
   }
 
   function clearTransitionNames() { $$(".card .card-media").forEach(function (el) { el.style.viewTransitionName = ""; }); }
-
-  /* Page change: an ivory panel with the OSCAR mark rises over the page, the new page is drawn underneath,
-     and the panel lifts away. About 0.8 seconds; a second click while it runs just swaps the page. */
-  var curtainTimers = [];
-  function curtain(go) {
-    var c = $("#curtain");
-    if (!c || curtainTimers.length) { go(); return; }
-    c.hidden = false;
-    c.className = "curtain";
-    void c.offsetWidth;
-    c.classList.add("in");
-    curtainTimers.push(setTimeout(function () {
-      go();
-      c.classList.remove("in");
-      c.classList.add("out");
-      curtainTimers.push(setTimeout(function () { c.hidden = true; c.className = "curtain"; curtainTimers = []; }, 560));
-    }, 360));
-  }
 
   function renderView(opts) {
     opts = opts || {};
@@ -1168,6 +1160,18 @@
     setupBuybar(r.view === "product" ? O.data.bySlug(r.slug) : null);
     updateHeroHeader();
     if (opts.keep) { window.scrollTo(0, y); return; }
+    /* "Book a fitting" opens the visit page at the fitting form */
+    if (r.book) {
+      var fit = $("#fitting"), fh = $("#fit-form-title") || $("#ready-title");
+      if (fit) {
+        setTimeout(function () {
+          try { fit.scrollIntoView({ block: "start", behavior: "instant" }); } catch (e) { fit.scrollIntoView(); }
+          if (fh) fh.focus({ preventScroll: true });
+        }, opts.initial ? 120 : 0);
+        if (!opts.initial) announce(t("route.loaded", { page: t("visit.fitTitle") }));
+        return;
+      }
+    }
     if (!opts.initial) {
       try { window.scrollTo({ top: 0, behavior: "instant" }); } catch (e) { window.scrollTo(0, 0); }
       var h1 = main.querySelector("h1");
@@ -1359,7 +1363,7 @@
       t("wa.hello"), t("wa.fitTitle"), "",
       t("wa.name") + ": " + f.name.trim(),
       t("wa.phone") + ": " + f.phone.trim(),
-      f.date ? t("wa.date") + ": " + f.date : "",
+      f.date ? t("wa.date") + ": " + fmtDate(new Date(f.date + "T12:00:00").getTime()) : "",
       t("wa.time") + ": " + t("time." + f.time),
       t("wa.event") + ": " + t("ev." + f.event),
       f.size.trim() ? t("wa.size") + ": " + f.size.trim() : "",

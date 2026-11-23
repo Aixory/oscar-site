@@ -7,7 +7,7 @@ Oscar.config = {
   storeName: "OSCAR",
 
   // Path or URL of the logo image. Leave empty to show the text wordmark.
-  logo: "assets/img/logo/logo-wordmark.png",
+  logo: "assets/img/logo/logo-wordmark-black.png",
 
   // The big picture at the top of the home page. While it is set (and the bot hasn't switched it off),
   // it shows instead of the product photos below. Phones get the "small" crop.
@@ -19,7 +19,7 @@ Oscar.config = {
   // Full-screen photos at the top of the home page when there is no banner (slugs). Phones show the first one.
   heroProducts: ["noir-sequin-drape-gown", "ivory-lace-corset-gown", "plum-satin-sparkle-gown"],
   // Photo beside the "book a fitting" section on the home page.
-  fittingProduct: "pearl-trim-suit",
+  fittingProduct: "ivory-lace-corset-gown",
 
   // Shown while the site uses sample dresses, prices and placeholder photos.
   // Set to false once real products are loaded.

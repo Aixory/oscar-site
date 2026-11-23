@@ -1,6 +1,6 @@
 /* OSCAR Boutique — placeholder dress illustrations.
-   Each sample dress is drawn on a dress form inside an arched boutique mirror.
-   As soon as a product has real photos (product.images), those are shown instead. */
+   A piece without photos is drawn as a plain dress form on a quiet grey backdrop (no frames, no gold),
+   so it sits calmly among the real photos. As soon as a product has photos (product.images), those show instead. */
 window.Oscar = window.Oscar || {};
 
 Oscar.art = (function () {
@@ -118,27 +118,23 @@ Oscar.art = (function () {
     var a = product.art || {};
     var shape = SHAPES[a.shape] ? a.shape : "column";
     var id = "oa" + (++uid);
-    var backdrop = (a.backdrop || ["#F3EBE2", "#DCCBB9"]).slice();
-    var darkBack = luminance(backdrop[0]) < 0.2;
-    if (view === "look") backdrop = darkBack ? ["#F1E4DA", "#D9B9AE"] : ["#232A52", "#0E1126"];
+    /* Always the same neutral backdrop: light grey, or charcoal for the "on the night" view */
+    var backdrop = view === "look" ? ["#2B2B2B", "#151515"] : ["#F4F4F2", "#E4E4E0"];
     var nowDark = luminance(backdrop[0]) < 0.2;
-    var dress = a.dress || "#1B2140";
+    var dress = a.dress || "#2A2A2A";
     var dressLum = luminance(dress);
     var c = {
       dress: dress,
       dressDark: mix(dress, "#000000", 0.18),
       fold: dressLum < 0.08 ? "rgba(255,255,255,.14)" : "rgba(0,0,0,.16)",
-      accent: a.accent || "#D4AF62",
-      form: nowDark ? "#CBBBA7" : "#EADFD2",
-      brass: "#B8955A",
-      brassDark: "#7E6439",
+      accent: a.accent || "#BDBDBD",
+      form: nowDark ? "#9C9C9A" : "#E2E2DE",
+      brass: "#8E8E8E",
+      brassDark: "#5E5E5E",
       sheen: id + "s",
       seq: id + "q"
     };
     var vb = view === "detail" ? "82 46 136 181" : "0 0 300 400";
-    var arch = '<path d="M58 400 V162 A92 92 0 0 1 242 162 V400" fill="' + (nowDark ? "rgba(255,255,255,.04)" : "rgba(255,255,255,.32)") + '"' +
-      ' stroke="' + (nowDark ? "#D4AF62" : "#B8955A") + '" stroke-opacity="' + (nowDark ? ".75" : ".6") + '" stroke-width="1.4"' +
-      (opts.drawArch ? ' class="arch-draw" pathLength="1"' : "") + '/>';
     var label = opts.decorative ? ' aria-hidden="true" focusable="false"' :
       ' role="img" aria-label="' + Oscar.esc(Oscar.t("product.placeholderAlt", { name: Oscar.tx(product.name), color: Oscar.tx(product.color) })) + '"';
     return '<svg class="art-svg" viewBox="' + vb + '" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"' + label + '>' +
@@ -148,8 +144,7 @@ Oscar.art = (function () {
       '<pattern id="' + c.seq + '" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".95" fill="' + (a.sequin || "#E9DDBF") + '" opacity=".75"/><circle cx="4.5" cy="4.5" r=".7" fill="' + (a.sequin || "#E9DDBF") + '" opacity=".45"/></pattern>' +
       '</defs>' +
       '<rect width="300" height="400" fill="url(#' + id + 'b)"/>' +
-      arch +
-      (nowDark ? sparkles("#E6C987") : "") +
+      
       '<ellipse cx="150" cy="372" rx="78" ry="7" fill="#000" opacity=".14"/>' +
       SHAPES[shape](c).replace(/\{brassDark\}/g, c.brassDark).replace(/\{brass\}/g, c.brass) +
       '</svg>';

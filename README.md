@@ -9,11 +9,17 @@ It works in two parts:
 
 Until the database is connected, the site shows its built-in sample collection with an example sale (15% off two gowns), an example code (`OSCAR10`) and example stock limits, so everything can be tried. In this preview the footer also has a "Try a holiday look" menu.
 
+## Look and feel (premium pass, November 2026)
+
+Black and white only, square edges, photos first. The logo is the shop's own mark in black (white over photos, in dark mode and on the black footer); the gold originals stay in `assets/img/logo/`. Grids lead with the plain-backdrop studio photo of each piece and show the boutique photo on hover. No red sale badges or "last pieces" warnings: a sale is the old price struck through. "Book a fitting" (`#book`) is in the header, the hero, the menu and the fitting section, and opens the visit page at the fitting form. Pages fade in; the opening shows the black logo for about a second.
+
+**To go back to the previous design:** it is kept unchanged on the `classic-design` branch. Replace `main` with it (`git checkout main && git reset --hard classic-design && git push --force origin main`), or ask Claude to restore it.
+
 ## What's in the folder
 
 ```
 index.html              the page shell
-assets/css/oscar.css    all styles: photo-first minimal look, dark mode, high contrast
+assets/css/oscar.css    all styles: black-and-white photo-first look, dark mode, high contrast
 assets/js/config.js     store details: phone, address, hours, currencies, logo, connections
 assets/js/i18n.js       every piece of interface text in Hebrew, English, Arabic and Russian
 assets/js/products.js   sample dresses, example sale/stock, and loading from Supabase

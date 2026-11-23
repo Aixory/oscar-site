@@ -81,7 +81,7 @@ Oscar.sampleProducts = [
   {
     slug: "noir-buckle-gown", price: 890, isNew: true, categories: ["maxi", "modest"],
     sizes: SIZES, soldOut: [], images: photo("noir-buckle-gown"),
-    name: { he: "שמלת אבזם שחורה", en: "Noir Buckle Gown", ar: "فستان أسود بإبزيم", ru: "Чёрное платье с пряжкой" },
+    name: { he: "שמלת אבזם שחורה", en: "Black Buckle Gown", ar: "فستان أسود بإبزيم", ru: "Чёрное платье с пряжкой" },
     color: { he: "שחור", en: "Black", ar: "أسود", ru: "Чёрный" },
     description: {
       he: "שמלה ארוכה וצמודה עם שרוולים ארוכים וצווארון סירה, כיווץ במותן עם אבזם זהב ושסע בצד.",
@@ -201,7 +201,7 @@ Oscar.sampleProducts = [
   {
     slug: "noir-sequin-drape-gown", price: 1390, isNew: true, categories: ["maxi"], group: "sequin-drape",
     sizes: SIZES, soldOut: [], images: photo("noir-sequin-drape-gown").concat(studio("noir-sequin-drape-gown")),
-    name: { he: "שמלת פאייטים שחורה עם שסע", en: "Noir Sequin Draped Gown", ar: "فستان ترتر أسود بفتحة", ru: "Чёрное платье с пайетками" },
+    name: { he: "שמלת פאייטים שחורה עם שסע", en: "Black Sequin Draped Gown", ar: "فستان ترتر أسود بفتحة", ru: "Чёрное платье с пайетками" },
     color: { he: "שחור", en: "Black", ar: "أسود", ru: "Чёрный" },
     description: {
       he: "שמלת סטרפלס ארוכה רקומה פאייטים שחורים, עם מחשוף קאול, כיווצים בירך, שסע גבוה ושובל קצר.",
@@ -225,7 +225,7 @@ Oscar.sampleProducts = [
   {
     slug: "noir-zip-gown", price: 890, isNew: true, categories: ["maxi", "modest"], group: "zip-gown",
     sizes: SIZES, soldOut: [], images: photo("noir-zip-gown").concat(studio("noir-zip-gown")),
-    name: { he: "שמלת זיפ שחורה", en: "Noir Zip Gown", ar: "فستان السحّاب الأسود", ru: "Чёрное платье с молнией" },
+    name: { he: "שמלת זיפ שחורה", en: "Black Zip Gown", ar: "فستان السحّاب الأسود", ru: "Чёрное платье с молнией" },
     color: { he: "שחור", en: "Black", ar: "أسود", ru: "Чёрный" },
     description: {
       he: "שמלה ארוכה עם צווארון גבוה ושרוולים ארוכים, כיווצים במותן ורוכסן זהב אלכסוני שנפתח לשסע.",
