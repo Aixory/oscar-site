@@ -1180,7 +1180,9 @@
   /* ───────────── Header sits clear over the hero photo, solid once you scroll past it ───────────── */
   function updateHeroHeader() {
     var hero = $("#content .hero"), header = $("#site-header");
-    var over = !!hero && !!header && hero.getBoundingClientRect().bottom > header.getBoundingClientRect().bottom + 4;
+    /* Below 1280px the banner's words sit on a black band under the photo: the header stays clear only over the photo itself */
+    var media = hero && hero.classList.contains("hero-banner") && window.innerWidth < 1280 ? hero.querySelector(".hero-media") : hero;
+    var over = !!media && !!header && media.getBoundingClientRect().bottom > header.getBoundingClientRect().bottom + 4;
     document.body.classList.toggle("at-hero", over);
   }
   var heroTick = false;
