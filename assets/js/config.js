@@ -38,10 +38,10 @@ Oscar.config = {
   instagramHandle: "@oscar_boutique_ramle",
 
   address: {
-    he: "הרצל 73, רמלה",
-    en: "Herzl St 73, Ramla",
-    ar: "شارع هرتسل 73، الرملة",
-    ru: "ул. Герцль 73, Рамла"
+    he: "שדרות הרצל 73, רמלה",
+    en: "Sderot Herzl 73, Ramla",
+    ar: "جادة هرتسل 73، الرملة",
+    ru: "бульвар Герцль 73, Рамла"
   },
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=%D7%94%D7%A8%D7%A6%D7%9C+73+%D7%A8%D7%9E%D7%9C%D7%94",
   wazeUrl: "https://waze.com/ul?q=%D7%94%D7%A8%D7%A6%D7%9C%2073%20%D7%A8%D7%9E%D7%9C%D7%94&navigate=yes",
